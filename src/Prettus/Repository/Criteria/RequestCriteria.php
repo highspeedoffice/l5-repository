@@ -85,7 +85,7 @@ class RequestCriteria implements CriteriaInterface
                         $field = array_pop($explode);
                         $relation = implode('.', $explode);
                     }
-                    if($condition === 'in'){
+                    if($condition === 'in' || $condition === 'notin'){
                         $value = explode(',',$value);
                         if( trim($value[0]) === "" || $field == $value[0]){
                             $value = null;
@@ -104,6 +104,8 @@ class RequestCriteria implements CriteriaInterface
                                 $query->whereHas($relation, function($query) use($field,$condition,$value) {
                                     if($condition === 'in'){
                                         $query->whereIn($field,$value);
+                                    }elseif($condition === 'notin'){
+                                        $query->whereNotIn($field,$value);
                                     }elseif($condition === 'between'){
                                         $query->whereBetween($field,$value);
                                     }else{
@@ -113,6 +115,8 @@ class RequestCriteria implements CriteriaInterface
                             } else {
                                 if($condition === 'in'){
                                     $query->whereIn($modelTableName.'.'.$field,$value);
+                                }elseif($condition === 'notin'){
+                                    $query->whereNotIn($modelTableName.'.'.$field,$value);
                                 }elseif($condition === 'between'){
                                     $query->whereBetween($modelTableName.'.'.$field,$value);
                                 }else{
@@ -127,6 +131,8 @@ class RequestCriteria implements CriteriaInterface
                                 $query->orWhereHas($relation, function($query) use($field,$condition,$value) {
                                     if($condition === 'in'){
                                         $query->whereIn($field,$value);
+                                    }elseif($condition === 'notin'){
+                                        $query->whereNotIn($field,$value);
                                     }elseif($condition === 'between'){
                                         $query->whereBetween($field, $value);
                                     }else{
@@ -136,6 +142,8 @@ class RequestCriteria implements CriteriaInterface
                             } else {
                                 if($condition === 'in'){
                                     $query->orWhereIn($modelTableName.'.'.$field, $value);
+                                }elseif($condition === 'notin'){
+                                    $query->orWhereNotIn($modelTableName.'.'.$field,$value);
                                 }elseif($condition === 'between'){
                                     $query->whereBetween($modelTableName.'.'.$field,$value);
                                 }else{
