@@ -198,6 +198,15 @@ class RequestCriteria implements CriteriaInterface
      */
     protected function parserFieldsOrderBy($model, $orderBy, $sortedBy)
     {
+        /**
+         * Ignore orderBy's that have more than 2 levels.
+         * These need to be handled in scopeQuery separately
+         * ex.
+         * order.products.description
+         */
+        if (count(explode('.', $orderBy)) > 2) {
+            return $model;
+        }
         $split = explode('|', $orderBy);
         if(count($split) > 1) {
             /*
