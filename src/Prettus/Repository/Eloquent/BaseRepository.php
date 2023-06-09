@@ -664,11 +664,11 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      *
      * @return mixed
      * @throws ValidatorException
-     *
      */
     public function update(array $attributes, $id)
     {
         $this->applyScope();
+        $this->applyCriteria();
 
         if (!is_null($this->validator)) {
             // we should pass data that has been casts by the model
