@@ -38,6 +38,7 @@ class RequestCriteria implements CriteriaInterface
     public function apply($model, RepositoryInterface $repository)
     {
         $fieldsSearchable = $repository->getFieldsSearchable();
+        $casts = $repository->getSearchableCasts();
         $search = $this->request->get(config('repository.criteria.params.search', 'search'), null);
         $searchFields = $this->request->get(config('repository.criteria.params.searchFields', 'searchFields'), null);
         $filter = $this->request->get(config('repository.criteria.params.filter', 'filter'), null);
@@ -57,7 +58,7 @@ class RequestCriteria implements CriteriaInterface
             $search = $this->parserSearchValue($search);
             $modelForceAndWhere = strtolower($searchJoin) === 'and';
 
-            $model = $model->where(function ($query) use ($fields, $search, $searchData, $isFirstField, $modelForceAndWhere) {
+            $model = $model->where(function ($query) use ($fields, $casts, $search, $searchData, $isFirstField, $modelForceAndWhere) {
                 /** @var Builder $query */
 
                 foreach ($fields as $field => $condition) {
@@ -113,7 +114,9 @@ class RequestCriteria implements CriteriaInterface
                                     }
                                 });
                             } else {
-                                if($condition === 'in'){
+                                if (isset($casts[$field]) && $casts[$field] === 'text' && ($condition === 'like' || $condition === 'ilike')) {
+                                    $query->whereRaw('CAST(' . $modelTableName . '.' . $field . ' AS TEXT) '.$condition.' ?', ["%$value%"]);
+                                } elseif($condition === 'in'){
                                     $query->whereIn($modelTableName.'.'.$field,$value);
                                 }elseif($condition === 'notin'){
                                     $query->whereNotIn($modelTableName.'.'.$field,$value);
@@ -140,7 +143,9 @@ class RequestCriteria implements CriteriaInterface
                                     }
                                 });
                             } else {
-                                if($condition === 'in'){
+                                if (isset($searchableCasts[$field]) && $searchableCasts[$field] === 'text' && ($condition === 'like' || $condition === 'ilike')) {
+                                    $query->orWhereRaw('CAST(' . $modelTableName . '.' . $field . ' AS TEXT) '.$condition.' ?', ["%$value%"]);
+                                } elseif($condition === 'in'){
                                     $query->orWhereIn($modelTableName.'.'.$field, $value);
                                 }elseif($condition === 'notin'){
                                     $query->orWhereNotIn($modelTableName.'.'.$field,$value);

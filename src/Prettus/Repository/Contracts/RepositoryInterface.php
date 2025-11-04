@@ -261,6 +261,8 @@ interface RepositoryInterface
      */
     public function getFieldsSearchable();
 
+    public function getSearchableCasts();
+
     /**
      * Set Presenter
      *

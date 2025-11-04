@@ -50,6 +50,8 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      */
     protected $fieldSearchable = [];
 
+    protected $searchableCasts = [];
+
     /**
      * @var PresenterInterface
      */
@@ -252,6 +254,11 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     public function getFieldsSearchable()
     {
         return $this->fieldSearchable;
+    }
+
+    public function getSearchableCasts()
+    {
+        return $this->searchableCasts;
     }
 
     /**
