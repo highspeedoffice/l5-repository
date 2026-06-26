@@ -12,6 +12,7 @@
     "model",
     "cache"
   ],
+  "license": "MIT",
   "require": {
     "php": "^8.2",
     "illuminate/http": "^8.0|^9.0|^10.0|^11.0|^12.0|^13.0",
