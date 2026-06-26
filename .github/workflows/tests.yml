@@ -33,6 +33,8 @@ jobs:
             "13.*") echo "version=^11.0" >> "$GITHUB_OUTPUT" ;;
           esac
       - name: Install dependencies
+        env:
+          COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH_ENV }}
         run: |
           composer require \
             "illuminate/http:${{ matrix.laravel }}" \
