@@ -34,7 +34,7 @@ jobs:
           esac
       - name: Install dependencies
         env:
-          COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH_ENV }}
+          COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH_SECRETS }}
         run: |
           composer require \
             "illuminate/http:${{ matrix.laravel }}" \
