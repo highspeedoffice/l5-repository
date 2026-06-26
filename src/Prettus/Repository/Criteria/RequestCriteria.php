@@ -301,7 +301,7 @@ class RequestCriteria implements CriteriaInterface
         return $search;
     }
 
-    protected function parserFieldsSearch(array $fields = [], array $searchFields = null, array $dataKeys = null)
+    protected function parserFieldsSearch(array $fields = [], ?array $searchFields = null, ?array $dataKeys = null)
     {
         if (!is_null($searchFields) && count($searchFields)) {
             $acceptedConditions = config('repository.criteria.acceptedConditions', [
